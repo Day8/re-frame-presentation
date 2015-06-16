@@ -3,6 +3,6 @@
     (:require [re-frame.core :as re-frame]))
 
 (re-frame/register-sub
- :name
+ :seconds
  (fn [db]
-   (reaction (:name @db))))
+   (reaction (:seconds @db))))
