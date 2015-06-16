@@ -7,7 +7,7 @@
 (def click-count (reagent/atom 0))
 
 (defn counting-component []
-  [:div
+  [:h2
    "The atom " [:code "click-count"] " has value: "
    @click-count ". "
    [:input {:type "button" :value "Click me!"
@@ -17,22 +17,22 @@
   (let [seconds-elapsed (reagent/atom 0)]
     (fn []
       (js/setTimeout #(swap! seconds-elapsed inc) 1000)
-      [:div
+      [:h2
        "Seconds Elapsed: " @seconds-elapsed])))
 
 (defn timer-component-re-frame []
   (let [seconds-elapsed (re-frame/subscribe [:seconds])]
     (fn []
       (js/setTimeout #(re-frame/dispatch [:inc-seconds]) 1000)
-      [:div
+      [:h2
        "Seconds Elapsed: " @seconds-elapsed])))
 
 (defn main-panel []
   [:div 
-   [:h2 "reagent example 1"]
+   [:h1 "reagent example 1"]
    [counting-component]
-   [:h2 "reagent example 2"]
+   [:h1 "reagent example 2"]
    [timer-component]
-   [:h2 "re-frame example"]
+   [:h1 "re-frame example"]
    [timer-component-re-frame]
    ])
