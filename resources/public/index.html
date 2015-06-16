@@ -1,15 +1,339 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-	<meta charset='utf-8'>
+	<meta charset="utf-8">
 
-	<title>re-frame - examples</title>
+	<title>re-frame - A Clojurescript framework for reagent web-apps</title>
 
+	<meta name="description" content="A Clojurescript framework for 
+	reagent web-apps">
+	<meta name="author" content="Stuart Mitchell">
 
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+	<!-- Code syntax highlighting -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName( 'head' )[0].appendChild( link );
+		document.getElementById('theme').setAttribute('href','css/theme/solarized.css');
+	</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
 </head>
-<body>
-	<script src="js/compiled/app.js"></script>
-	<script>re_frame_presentation.core.init();</script>
-	<div id="app"/>
-</body>
-</html>
+
+	<body>
+	<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>re-frame</h1>
+					<h3>A Clojurescript framework for reagent web-apps</h3>
+					<a href="https://github.com/Day8/re-frame">
+						https://github.com/Day8/re-frame</a>
+						<p>
+							<small>Presented by 
+								<a href="http://www.stuartmitchell.com">
+									Stuart Mitchell</a></small>
+								</p>
+				</section>
+				<section data-markdown>
+					<script type="text/template">
+						##Who develops re-frame?
+
+						* [Day8](http://www.day8.com.au) develops 
+						software for 
+							* televison networks
+							* advertising agencies
+							* media buying companies
+						* [Mike Thompson](mike.thompson@day8.com.au) is the 
+						owner/lead developer
+						* Moving from a flash based webapp to clojurescript
+					</script>
+				</section>
+				<section>
+					<section data-markdown>
+					<script type="text/template">
+						##What is it based on?
+
+						* [clojurescript](https://github.com/clojure/clojurescript)
+						* [react.js](https://facebook.github.io/react/)
+						* [reagent](https://github.com/reagent-project/reagent)
+					</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+							###clojurescript ![logo](http://clojure.org/space/showimage/clojure-icon.gif)
+
+							* An implementation of clojure on javascript
+							* Compiled using clojure
+							* Optimized with [google closure](
+							https://developers.google.com/closure/)
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+							###react.js <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/5/57/React.js_logo.svg/200px-React.js_logo.svg.png" height="100px" />
+
+							* From facebook
+							* Implments a Virtual Dom
+							* A one way dataflow
+								* components
+								* props
+								* render
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+							###reagent 
+
+							* cljs api for react.js
+							* uses [hiccup](https://github.com/weavejester/hiccup)-like syntax to build components
+							```clojure
+								(defn child [name]
+  									[:p "Hi, I am " name])
+
+								(defn childcaller []
+  									[child "Foo Bar"])
+							```
+							* Uses a version of `atom` to trigger renders
+						</script>
+					</section>
+				</section>
+				<section>
+					<section>
+							<h2>reagent example</h2>
+							<p> A simple component with some state</p>
+							<pre><code>
+(ns example
+  (:require [reagent.core :as reagent]))
+(def click-count (reagent/atom 0))
+
+(defn counting-component []
+  [:div
+   "The atom " [:code "click-count"] " has value: "
+   @click-count ". "
+   [:input {:type "button" :value "Click me!"
+            :on-click #(swap! click-count inc)}]])
+							</code></pre>
+							<iframe data-src="example1.html" width="90%"
+							height="90%"></iframe>
+					</section>
+					<section data-markdown>
+							<script type="text/template">
+							###Visualising the data
+							![reagent example 1](images/reagent_example.svg)
+							</script>
+
+						<aside class="notes">
+							http://www.jointjs.com/rappid#b241be7b-dc48-4e3a-abeb-f62551037727
+						</aside>
+					</section>
+					<section>
+							<h3>An exmple of a type 2 component</h3>
+							<p> The component returns a function</p>
+							<pre><code>
+(defn timer-component []
+  (let [seconds-elapsed (reagent/atom 0)]
+    (fn []
+      (js/setTimeout #(swap! seconds-elapsed inc) 1000)
+      [:div
+       "Seconds Elapsed: " @seconds-elapsed])))
+							</code></pre>
+							<iframe data-src="example2.html" width="90%"
+							height="90%"></iframe>
+
+					</section>
+					<section data-markdown>
+							<script type="text/template">
+							### More examples
+							The reagent [demo](http://reagent-project.github.io/)
+							contains more examples 
+							</script>
+					</section>
+				</section>
+				<section>
+					<section data-markdown>
+							<script type="text/template">
+							## What is re-frame?
+							
+							* re-frame is a pattern for writing SPAs in ClojureScript, using Reagent.
+							* re-frame contains helper functions/macros to help you use the pattern 
+							* contains a 1200 line README.md that explains re-frame
+							</script>
+					</section>
+					<section data-markdown>
+							<script type="text/template">
+							### re-frame as the water cycle
+							<img src="images/water_cycle.jpg" width="70%"/>
+							</script>
+					</section>
+					<section data-markdown>
+							<script type="text/template">
+							### re-frame cycle
+							<img src="images/reframe_cycle.svg" width="60%"/>
+							</script>
+						<aside class="notes">
+							http://www.jointjs.com/rappid#91e32e4f-beb5-4e35-a7ef-a8b7b8b1ceab
+						</aside>
+					</section>
+					<section data-markdown>
+							<script type="text/template">
+							To build a re-frame app, you:
+
+							* design your apps data structure  
+							(data layer)
+							* write and register subscription functions  
+							(query layer)
+							* write Reagent component functions  
+							(view layer)
+							* write and register event handler functions  
+							(control layer and/or state transition layer)
+							</script>
+					</section>
+					<section data-markdown>
+							<script type="text/template">
+							To build a re-frame app, you:
+
+							* `app-db`
+							* `register-subscription`
+							* component
+							* `register-handler`
+							</script>
+					</section>
+				</section>
+				<section >
+					<section data-markdown>
+							<script type="text/template">
+							##[reagent example](#/3/2) as re-frame
+							###use a template
+							```
+							$lein new re-frame <project_name>
+							```
+							* resources -> public
+							        index.html
+							* src -> cljs -> project_name -> src
+							        core.cljs
+							        db.cljs
+							        handlers.cljs
+							        subs.cljs
+							        views.cljs
+							</script>
+					</section >
+					<section data-markdown>
+							<script type="text/template">
+							###define your data
+							```
+							(ns re-frame-presentation.db)
+
+							(def default-db
+							  {:seconds 0})
+							```
+							</script>
+					</section >
+					<section data-markdown>
+							<script type="text/template">
+							###define your subscriptions
+							```
+							(re-frame/register-sub
+							 :seconds
+							 (fn [db]
+							   (reaction (:seconds @db))))
+							```
+							</script>
+					</section >
+					<section data-markdown>
+							<script type="text/template">
+							###define your component
+
+							```
+							(defn timer-component []
+							  (let [seconds-elapsed (subscribe [:seconds])]
+							    (fn []
+							      (js/setTimeout #(dispatch [:inc-seconds]) 1000)
+							      [:div
+							       "Seconds Elapsed: " @seconds-elapsed])))
+							```
+							</script>
+					</section>
+					<section data-markdown>
+							<script type="text/template">
+							###define your handlers
+
+							```
+							(re-frame/register-handler
+							 :inc-seconds
+							 (fn  [db _]
+							   (assoc db :seconds (inc (:seconds db)))))
+							```
+							</script>
+					</section>
+					<section data-markdown>
+							<script type="text/template">
+							###or use a helper function
+
+							```
+							(re-frame/register-handler
+							 :inc-seconds-path
+							 (re-frame/path [:seconds])
+							 (fn  [seconds _]
+							   (inc seconds)))
+   							```
+							###Also show how arguments are passed
+
+							</script>
+					</section>
+					<section>
+							<h3>The live app :-)</h3>
+							<iframe data-src="example3.html" width="90%"
+							height="90%"></iframe>
+					</section>
+				</section>
+				</div>
+			</div>
+
+			<script src="lib/js/head.min.js"></script>
+			<script src="js/reveal.js"></script>
+
+			<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+				{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+				{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+				{ src: 'plugin/zoom-js/zoom.js', async: true },
+				{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+	</html>
