@@ -1,6 +1,9 @@
 # re-frame-presentation
 
-A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.
+A [re-frame](https://github.com/Day8/re-frame) application and reveal.js presentation on re-frame 
+(talk about dogfooding)
+
+It has a reveal.js presentation and 3 live examples in reagent and re-frame
 
 ## Development Mode
 
